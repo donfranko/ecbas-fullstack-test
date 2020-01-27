@@ -1,0 +1,159 @@
+<!-- Title group  -->
+<div class="title-group">
+    <h1 class="mat-h1">Add Booking</h1>
+    <mat-divider fxFlex="1 0"></mat-divider>
+  </div>
+  
+  <!-- Form -->
+  <div class="inner-wrapper">
+    <form [formGroup]="bookingForm" (ngSubmit)="updateBookingForm()" #resetBookingForm="ngForm" novalidate>
+      <!-- Left block -->
+      <mat-card>
+        <div class="controlers-wrapper">
+          <!-- Passenger name -->
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Passenger name" formControlName="passengerName">
+            <mat-error *ngIf="handleError('passengerName', 'required')">
+              You must provide a <strong>passenger name</strong>
+            </mat-error>
+          </mat-form-field>
+  
+          <!-- Passenger contact number -->
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Passenger contact number" formControlName="passengerContactNumber">
+            <mat-error *ngIf="handleError('passengerContactNumber', 'required')">
+              You must provide a <strong>passenger contact number</strong>
+            </mat-error>
+          </mat-form-field>
+  
+          <!-- Pickup Time -->
+          <mat-form-field>
+            <mat-label>Pickup Time</mat-label>
+            <mat-datetimepicker-toggle [for]="datetimePicker" matSuffix></mat-datetimepicker-toggle>
+            <mat-datetimepicker #datetimePicker type="datetime" openOnFocus="true" timeInterval="5" mode="portrait"></mat-datetimepicker>
+            <mat-error *ngIf="handleError('pickupTime', 'required')">
+              Pickup Time is required
+            </mat-error>
+            <input matInput formControlName="pickupTime" [matDatetimepicker]="datetimePicker" required autocomplete="false">
+          </mat-form-field>
+  
+          <!-- Asap -->
+            <mat-slide-toggle
+                [color]="color"
+                [checked]="checked"
+                [disabled]="disabled" formControlName="asap">
+                Asap
+            </mat-slide-toggle>
+
+          <!-- Waiting time -->
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Waiting time" type="number" formControlName="waitingTime">
+            <mat-error *ngIf="handleError('waitingTime', 'required')">
+              You must provide a <strong>Waiting time</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <!-- No of passengers -->
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="No of passengers" type="number" formControlName="noOfPassengers">
+            <mat-error *ngIf="handleError('noOfPassengers', 'required')">
+              You must provide a <strong>No of passengers</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Price -->
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Price" type="number" formControlName="price">
+            <span matSuffix>$&nbsp;</span>
+            <mat-error *ngIf="handleError('price', 'required')">
+              You must provide a <strong>price</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Rating -->
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Rating" type="number" formControlName="rating">
+            <mat-error *ngIf="handleError('rating', 'required')">
+              You must provide a <strong>rating</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card>
+
+
+      <!-- Right block -->
+      <mat-card>
+        <div class="controlers-wrapper">
+            Trip Way Points:
+        <div formArrayName="tripWaypointDtos">
+          <div *ngFor="let skill of tripWaypointDtos?.controls; let i=index">
+            <fieldset class="form-group">
+              <legend class="col-form-label col-sm-2 pt-0">Trip Way Point {{i+1}}</legend>
+              <ng-container [formGroupName]="i">
+                <!-- Lat -->
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="Lat" type="number" formControlName="lat">
+                  <mat-error *ngIf="handleErrorTripWayPoint('lat', 'required')">
+                    You must provide a <strong>lat</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- Lng -->
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="Lng" type="number" formControlName="lng">
+                  <mat-error *ngIf="handleErrorTripWayPoint('lng', 'required')">
+                    You must provide a <strong>lng</strong>
+                  </mat-error>
+                </mat-form-field>
+
+                <!-- Trip Way Point Timestamp -->
+                <mat-form-field>
+                  <mat-label>Pickup Time</mat-label>
+                  <mat-datetimepicker-toggle [for]="datetimePicker" matSuffix></mat-datetimepicker-toggle>
+                  <mat-datetimepicker #datetimePicker type="datetime" openOnFocus="true" timeInterval="5" mode="portrait"></mat-datetimepicker>
+                  <mat-error *ngIf="handleErrorTripWayPoint('tripWayPointTimestamp', 'required')">
+                    Trip Way Point Timestamp is required
+                  </mat-error>
+                  <input matInput formControlName="tripWayPointTimestamp" [matDatetimepicker]="datetimePicker" autocomplete="false">
+                </mat-form-field>
+          
+                <!-- Locality -->
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="Locality" formControlName="locality">
+                  <mat-error *ngIf="handleErrorTripWayPoint('locality', 'required')">
+                    You must provide a <strong>locality</strong>
+                  </mat-error>
+                </mat-form-field>
+          
+                <!-- Last Stop -->
+                <mat-slide-toggle
+                    [color]="color"
+                    [checked]="checked"
+                    [disabled]="disabled" formControlName="lastStop">
+                    Last Stop
+                </mat-slide-toggle>
+
+                <p>
+                  <button (click)="removeTripWayPoint(i)">Remove</button>
+                </p>
+              </ng-container>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+
+      <p>
+        <button type="button" (click)="addTripWayPoints()">Add</button>
+      </p>
+      </mat-card>
+  
+      <!-- Submit & Reset -->
+      <mat-card>
+        <div class="full-wrapper button-wrapper">
+          <div class="button-wrapper">
+            <button mat-flat-button color="warn">Update</button>
+          </div>
+        </div>
+      </mat-card>
+    </form>
+  </div>
